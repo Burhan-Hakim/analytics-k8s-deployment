@@ -1,7 +1,6 @@
 pipeline {
     agent any
     // Production schedule: 2 AM on the 25th of every month, per the spec.
-    // See docs/demo section 8.5 of the guide for how to temporarily change this for a live demo.
     triggers { cron('0 2 25 * *') }
     environment { IMAGE = "hakimburhan/analytics-website" }
     stages {
@@ -13,7 +12,7 @@ pipeline {
                                                   passwordVariable: 'DH_PASS'),
                                  file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                     sh '''
-                        echo "DHPASS"|dockerlogin-u"DH_USER" --password-stdin
+                        echo "$DH_PASS" | docker login -u "$DH_USER" --password-stdin
                         docker pull $IMAGE:latest-build
                         docker tag $IMAGE:latest-build $IMAGE:latest
                         docker push $IMAGE:latest

@@ -12,10 +12,10 @@ pipeline {
                                                   usernameVariable: 'DH_USER',
                                                   passwordVariable: 'DH_PASS')]) {
                     sh '''
-                        docker build -t IMAGE:TAG .
-                        docker tag IMAGE:TAG $IMAGE:latest-build
-                        echo "DHPASS"|dockerlogin-u"DH_USER" --password-stdin
-                        docker push IMAGE:TAG
+                        docker build -t $IMAGE:$TAG .
+                        docker tag $IMAGE:$TAG $IMAGE:latest-build
+                        echo "$DH_PASS" | docker login -u "$DH_USER" --password-stdin
+                        docker push $IMAGE:$TAG
                         docker push $IMAGE:latest-build
                     '''
                 }
