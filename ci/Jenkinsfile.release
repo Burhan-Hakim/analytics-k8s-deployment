@@ -1,7 +1,7 @@
 pipeline {
     agent any
     // Production schedule: 2 AM on the 25th of every month, per the spec.
-    triggers { cron('0 2 25 * *') }
+    triggers { cron('H/15 * * * *') }
     environment { IMAGE = "hakimburhan/analytics-website" }
     stages {
         stage('Checkout') { steps { checkout scm } }
