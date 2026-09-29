@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    environment {
+        IMAGE = "hakimburhan/analytics-website"
+        TAG   = "build-${env.BUILD_NUMBER}"
+    }
+    stages {
+        stage('Checkout') { steps { checkout scm } }
+        stage('Build & Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub',
+                                                  usernameVariable: 'DH_USER',
+                                                  passwordVariable: 'DH_PASS')]) {
+                    sh '''
+                        docker build -t IMAGE:TAG .
+                        docker tag IMAGE:TAG $IMAGE:latest-build
+                        echo "DHPASS"|dockerlogin-u"DH_USER" --password-stdin
+                        docker push IMAGE:TAG
+                        docker push $IMAGE:latest-build
+                    '''
+                }
+            }
+        }
+    }
+}
