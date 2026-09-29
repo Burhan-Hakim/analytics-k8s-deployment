@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: analytics-website
-          image: YOUR_DOCKERHUB_USERNAME/analytics-website:latest
+          image: hakimburhan/analytics-website:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
