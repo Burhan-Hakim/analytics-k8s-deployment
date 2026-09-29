@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics Pvt Ltd — Real-time Data Intelligence</title>
+<style>
+  :root {
+    --bg: #0b1120;
+    --bg-alt: #111a2e;
+    --card: #16213b;
+    --border: #22304d;
+    --text: #e6ecff;
+    --text-dim: #93a1c4;
+    --accent: #34e0c4;
+    --accent-2: #7c8cff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  header {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(11,17,32,0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; }
+  .logo-mark {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  }
+  nav { display: flex; gap: 32px; font-size: 0.95rem; color: var(--text-dim); }
+  nav a:hover { color: var(--text); }
+  .btn {
+    padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; font-weight: 600;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #05121a;
+  }
+
+  .hero {
+    max-width: 1080px; margin: 0 auto;
+    padding: 100px 24px 80px;
+    text-align: center;
+  }
+  .pill {
+    display: inline-block; padding: 6px 16px; border-radius: 999px;
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--accent); font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 0.03em; margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 800; line-height: 1.15; letter-spacing: -0.02em;
+    margin-bottom: 22px;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p {
+    color: var(--text-dim); font-size: 1.1rem;
+    max-width: 620px; margin: 0 auto 36px;
+  }
+  .hero-actions { display: flex; gap: 16px; justify-content: center; }
+  .btn-ghost {
+    padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; font-weight: 600;
+    border: 1px solid var(--border); color: var(--text);
+  }
+
+  .dashboard-preview {
+    max-width: 900px; margin: 64px auto 0;
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 28px; box-shadow: 0 30px 80px -20px rgba(52,224,196,0.15);
+  }
+  .dashboard-preview .top-row { display: flex; gap: 12px; margin-bottom: 20px; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--border); }
+  .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .metric { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: left; }
+  .metric .label { color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .metric .value { font-size: 1.6rem; font-weight: 700; margin-top: 6px; }
+  .metric .value.up { color: var(--accent); }
+  .chart-row { display: flex; align-items: flex-end; gap: 6px; height: 90px; padding: 0 4px; }
+  .bar { flex: 1; background: linear-gradient(180deg, var(--accent-2), var(--accent)); border-radius: 4px 4px 0 0; opacity: 0.85; }
+
+  section.features { max-width: 1080px; margin: 0 auto; padding: 60px 24px; }
+  .section-head { text-align: center; margin-bottom: 48px; }
+  .section-head h2 { font-size: 2rem; font-weight: 800; margin-bottom: 12px; }
+  .section-head p { color: var(--text-dim); }
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+  .feature-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 28px;
+  }
+  .feature-icon {
+    width: 42px; height: 42px; border-radius: 10px; margin-bottom: 18px;
+    background: var(--bg-alt); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+  }
+  .feature-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+  .feature-card p { color: var(--text-dim); font-size: 0.92rem; }
+
+  .stats {
+    background: var(--bg-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 56px 24px;
+  }
+  .stats-inner {
+    max-width: 1080px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center;
+  }
+  .stat-value { font-size: 2.2rem; font-weight: 800; color: var(--accent); }
+  .stat-label { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; }
+
+  section.pricing { max-width: 1080px; margin: 0 auto; padding: 60px 24px; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .price-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 32px;
+    display: flex; flex-direction: column;
+  }
+  .price-card.featured { border-color: var(--accent); box-shadow: 0 20px 60px -20px rgba(52,224,196,0.25); }
+  .price-card h3 { font-size: 1.05rem; margin-bottom: 4px; }
+  .price-card .price { font-size: 2.2rem; font-weight: 800; margin: 12px 0 4px; }
+  .price-card .price span { font-size: 0.9rem; color: var(--text-dim); font-weight: 500; }
+  .price-card ul { list-style: none; margin: 20px 0 28px; color: var(--text-dim); font-size: 0.9rem; }
+  .price-card li { padding: 6px 0; }
+  .price-card li::before { content: "✓ "; color: var(--accent); }
+  .price-card .btn, .price-card .btn-ghost { text-align: center; margin-top: auto; }
+
+  footer {
+    text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+  }
+  footer .footer-brand { color: var(--text); font-weight: 700; margin-bottom: 6px; }
+  footer .btn { display: inline-block; margin-top: 16px; }
+
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(5,10,20,0.7);
+    z-index: 100; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 32px; max-width: 420px; width: 100%; position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 20px; cursor: pointer;
+    color: var(--text-dim); font-size: 1.3rem; background: none; border: none;
+  }
+  .modal h3 { font-size: 1.3rem; margin-bottom: 6px; }
+  .modal p.sub { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 22px; }
+  .modal label { display: block; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 6px; margin-top: 14px; }
+  .modal input, .modal textarea {
+    width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg-alt); color: var(--text); font-family: inherit; font-size: 0.9rem;
+  }
+  .modal textarea { resize: vertical; min-height: 70px; }
+  .modal .btn { width: 100%; margin-top: 22px; border: none; font-size: 0.95rem; cursor: pointer; }
+  .modal-success { display: none; text-align: center; padding: 20px 0; }
+  .modal-success.show { display: block; }
+  .modal-success .check {
+    width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 16px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: #05121a;
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 16px 20px; }
+    nav { display: none; }
+    .stats-inner, .metrics { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark"></div>
+    Analytics Pvt Ltd
+  </div>
+  <nav>
+    <a href="#platform">Platform</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#" class="js-demo-trigger">Contact</a>
+  </nav>
+  <a href="#" class="btn js-demo-trigger">Request a demo</a>
+</header>
+
+<section class="hero">
+  <span class="pill">Now deployed on Kubernetes</span>
+  <h1>Real-time analytics,<br><span>built for scale.</span></h1>
+  <p>Analytics Pvt Ltd turns raw operational data into decisions your team can act on the same day — deployed across a containerized, auto-scaling infrastructure.</p>
+  <div class="hero-actions">
+    <a href="#" class="btn js-demo-trigger">Request a demo</a>
+    <a href="#platform" class="btn-ghost">See how it works</a>
+  </div>
+
+  <div class="dashboard-preview" id="platform">
+    <div class="top-row">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="label">Active Pipelines</div>
+        <div class="value up">128</div>
+      </div>
+      <div class="metric">
+        <div class="label">Events / sec</div>
+        <div class="value up">4,910</div>
+      </div>
+      <div class="metric">
+        <div class="label">Uptime</div>
+        <div class="value">99.98%</div>
+      </div>
+    </div>
+    <div class="chart-row" id="chart"></div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="section-head">
+    <h2>Everything your data team needs</h2>
+    <p>One platform, from ingestion to insight.</p>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Real-time ingestion</h3>
+      <p>Stream events from any source and see them reflected in dashboards within seconds, not hours.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Custom dashboards</h3>
+      <p>Build the exact view your team needs — no waiting on a BI backlog to get an answer.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔐</div>
+      <h3>Enterprise-grade security</h3>
+      <p>Role-based access, audit logs, and encryption at rest and in transit, out of the box.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🚀</div>
+      <h3>Scales with you</h3>
+      <p>Runs on a containerized, horizontally-scaled deployment — built to handle traffic spikes without a redesign.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <h3>Smart alerting</h3>
+      <p>Get notified the moment a metric moves outside the range that matters to your business.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧩</div>
+      <h3>Open integrations</h3>
+      <p>Connect the tools you already use — no rip-and-replace required to get started.</p>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stats-inner">
+    <div>
+      <div class="stat-value">2.4M+</div>
+      <div class="stat-label">Events processed daily</div>
+    </div>
+    <div>
+      <div class="stat-value">99.98%</div>
+      <div class="stat-label">Platform uptime</div>
+    </div>
+    <div>
+      <div class="stat-value">180+</div>
+      <div class="stat-label">Companies onboard</div>
+    </div>
+    <div>
+      <div class="stat-value">&lt;150ms</div>
+      <div class="stat-label">Average query latency</div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="section-head">
+    <h2>Simple, transparent pricing</h2>
+    <p>Start small, scale when you need to.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <h3>Starter</h3>
+      <div class="price">$49<span>/mo</span></div>
+      <ul>
+        <li>Up to 50K events/day</li>
+        <li>3 dashboards</li>
+        <li>Email support</li>
+      </ul>
+      <a href="#" class="btn-ghost js-demo-trigger">Request a demo</a>
+    </div>
+    <div class="price-card featured">
+      <h3>Growth</h3>
+      <div class="price">$199<span>/mo</span></div>
+      <ul>
+        <li>Up to 2M events/day</li>
+        <li>Unlimited dashboards</li>
+        <li>Smart alerting</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="#" class="btn js-demo-trigger">Request a demo</a>
+    </div>
+    <div class="price-card">
+      <h3>Enterprise</h3>
+      <div class="price">Custom</div>
+      <ul>
+        <li>Unlimited events</li>
+        <li>Dedicated infrastructure</li>
+        <li>SSO & audit logs</li>
+        <li>Dedicated support</li>
+      </ul>
+      <a href="#" class="btn-ghost js-demo-trigger">Talk to sales</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="footer-brand">Analytics Pvt Ltd</div>
+  <div>Deployed on Kubernetes · Built and shipped through an automated CI/CD pipeline</div>
+  <a href="#" class="btn js-demo-trigger">Get in touch</a>
+</footer>
+
+<div class="modal-overlay" id="demoModalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+
+    <div id="demoFormWrap">
+      <h3>Request a demo</h3>
+      <p class="sub">Tell us a bit about your team and we'll be in touch.</p>
+      <form id="demoForm">
+        <label for="demoName">Name</label>
+        <input type="text" id="demoName" required placeholder="Jane Doe">
+
+        <label for="demoEmail">Work email</label>
+        <input type="email" id="demoEmail" required placeholder="jane@company.com">
+
+        <label for="demoCompany">Company</label>
+        <input type="text" id="demoCompany" placeholder="Company name">
+
+        <label for="demoMessage">What are you hoping to solve?</label>
+        <textarea id="demoMessage" placeholder="A short note helps us prep for the call"></textarea>
+
+        <button type="submit" class="btn">Send request</button>
+      </form>
+    </div>
+
+    <div class="modal-success" id="demoSuccess">
+      <div class="check">✓</div>
+      <h3>Thanks — request received</h3>
+      <p class="sub">This is a portfolio demo, so no one's actually notified, but that's exactly what a real submission would look like.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const chart = document.getElementById('chart');
+  const values = [40, 55, 48, 70, 62, 80, 74, 90, 82, 95, 88, 100];
+  values.forEach(v => {
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.height = v + '%';
+    chart.appendChild(bar);
+  });
+
+  // --- Demo request modal ---
+  const overlay = document.getElementById('demoModalOverlay');
+  const closeBtn = document.getElementById('modalClose');
+  const formWrap = document.getElementById('demoFormWrap');
+  const successWrap = document.getElementById('demoSuccess');
+  const form = document.getElementById('demoForm');
+
+  function openModal() {
+    overlay.classList.add('open');
+    formWrap.style.display = 'block';
+    successWrap.classList.remove('show');
+    form.reset();
+  }
+  function closeModal() {
+    overlay.classList.remove('open');
+  }
+
+  document.querySelectorAll('.js-demo-trigger').forEach(el => {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      openModal();
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    formWrap.style.display = 'none';
+    successWrap.classList.add('show');
+    setTimeout(closeModal, 2500);
+  });
+</script>
+
+</body>
+</html>
