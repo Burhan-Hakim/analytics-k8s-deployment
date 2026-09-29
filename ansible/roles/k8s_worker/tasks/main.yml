@@ -1,0 +1,9 @@
+---
+- name: Read the join command
+  set_fact:
+    join_command: "{{ lookup('file', '/tmp/kubeadm_join_command') }}"
+
+- name: Join the cluster
+  command: "{{ join_command }}"
+  args:
+    creates: /etc/kubernetes/kubelet.conf

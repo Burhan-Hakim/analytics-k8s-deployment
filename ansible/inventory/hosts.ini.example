@@ -1,0 +1,14 @@
+[k8s_master]
+K8S_MASTER_PRIVATE_IP
+
+[k8s_workers]
+K8S_WORKER1_PRIVATE_IP
+K8S_WORKER2_PRIVATE_IP
+
+[k8s_cluster:children]
+k8s_master
+k8s_workers
+
+[k8s_cluster:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/home/ubuntu/.ssh/id_rsa

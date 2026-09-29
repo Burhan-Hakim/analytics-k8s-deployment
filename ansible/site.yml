@@ -1,0 +1,37 @@
+---
+- name: Prepare every node
+  hosts: k8s_cluster
+  become: yes
+  roles: [common, containerd, kubernetes]
+
+- name: Bootstrap the control plane
+  hosts: k8s_master
+  become: yes
+  roles: [k8s_master]
+
+- name: Join workers
+  hosts: k8s_workers
+  become: yes
+  roles: [k8s_worker]
+
+- name: Stability gate - cluster must be healthy before you continue
+  hosts: k8s_master
+  become: yes
+  become_user: ubuntu
+  environment: { KUBECONFIG: /home/ubuntu/.kube/config }
+  tasks:
+    - name: Wait for all 3 nodes Ready
+      shell: kubectl get nodes --no-headers | awk '$2=="Ready"' | wc -l
+      register: ready_nodes
+      retries: 40
+      delay: 10
+      until: ready_nodes.stdout | int == 3
+      changed_when: false
+
+    - name: Show kube-system pods (check the RESTARTS column)
+      command: kubectl get pods -n kube-system
+      register: sysp
+      changed_when: false
+
+    - debug:
+        var: sysp.stdout_lines

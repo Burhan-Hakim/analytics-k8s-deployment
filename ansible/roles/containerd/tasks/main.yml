@@ -1,0 +1,37 @@
+---
+# Cluster nodes need containerd ONLY. No docker.io here.
+- name: Install containerd
+  apt:
+    name: containerd
+    state: present
+    update_cache: yes
+
+- name: Ensure config directory exists
+  file:
+    path: /etc/containerd
+    state: directory
+
+- name: Generate default containerd config
+  command: containerd config default
+  register: containerd_default
+  changed_when: false
+
+- name: Write config with the systemd cgroup driver enabled
+  copy:
+    dest: /etc/containerd/config.toml
+    content: "{{ containerd_default.stdout | regex_replace('SystemdCgroup = false', 'SystemdCgroup = true') }}"
+
+- name: Restart and enable containerd
+  service:
+    name: containerd
+    state: restarted
+    enabled: yes
+
+- name: Wait for the CRI socket
+  wait_for:
+    path: /run/containerd/containerd.sock
+    timeout: 60
+
+- name: GATE - fail early if the systemd cgroup driver is not active
+  command: grep -q "SystemdCgroup = true" /etc/containerd/config.toml
+  changed_when: false
