@@ -57,19 +57,19 @@ minutes later.
 
 ## Screenshots
 
-**Infrastructure stood up** 
+**Infrastructure stood up**
 ![terraform apply](docs/screenshots/08-terraform-apply.png)
 
-**Cluster healthy and holding steady** 
+**Cluster healthy and holding steady**
 ![nodes ready](docs/screenshots/12-nodes-ready-stable.png)
 
-**Build triggered by an actual push, not a click** 
+**Build triggered by an actual push, not a click**
 ![build](docs/screenshots/21-build-webhook-triggered.png)
 
-**Two replicas, spread across both workers** 
+**Two replicas, spread across both workers**
 ![pods](docs/screenshots/23-pods-two-nodes.png)
 
-**Live, from both worker nodes** 
+**Live, from both worker nodes**
 ![live site](docs/screenshots/26-live-site-both-workers.png)
 
 **Desktop and mobile**
